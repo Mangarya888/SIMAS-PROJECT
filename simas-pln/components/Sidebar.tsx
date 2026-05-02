@@ -1,26 +1,27 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import {
-  LayoutDashboard,
-  Package,
-  Tag,
-  MapPin,
-  History,
-  Zap,
-} from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { LayoutDashboard, Package, Tag, MapPin, History, Zap, LogOut } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/assets', label: 'Aset', icon: Package },
-  { href: '/categories', label: 'Kategori', icon: Tag },
-  { href: '/locations', label: 'Lokasi', icon: MapPin },
-  { href: '/history', label: 'Riwayat', icon: History },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard/assets', label: 'Aset', icon: Package },
+  { href: '/dashboard/categories', label: 'Kategori', icon: Tag },
+  { href: '/dashboard/locations', label: 'Lokasi', icon: MapPin },
+  { href: '/dashboard/history', label: 'Riwayat', icon: History },
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const { logout } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout()
+    router.push('/landing')
+  }
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-[#0a1628] border-r border-[#1e4080]/40 flex flex-col z-50">
@@ -53,17 +54,22 @@ export default function Sidebar() {
             >
               <Icon className={`w-4 h-4 ${isActive ? 'text-[#0ea5e9]' : ''}`} />
               {label}
-              {isActive && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#0ea5e9]" />
-              )}
+              {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#0ea5e9]" />}
             </Link>
           )
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="px-6 py-4 border-t border-[#1e4080]/40">
-        <p className="text-[10px] text-slate-600 font-mono">v1.0.0 · Asset Management</p>
+      {/* Logout */}
+      <div className="px-3 pb-4 border-t border-[#1e4080]/40 pt-4">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+        >
+          <LogOut className="w-4 h-4" />
+          Keluar
+        </button>
+        <p className="text-[10px] text-slate-600 font-mono px-3 mt-2">v1.0.0 · Asset Management</p>
       </div>
     </aside>
   )
