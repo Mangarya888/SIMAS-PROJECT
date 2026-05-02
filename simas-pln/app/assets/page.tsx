@@ -18,12 +18,21 @@ import PageHeader from '@/components/PageHeader'
 import StatusBadge from '@/components/StatusBadge'
 import Modal from '@/components/Modal'
 
-const emptyForm = {
+type StatusType = 'Tersedia' | 'Digunakan' | 'Rusak'
+
+const emptyForm: {
+  name: string
+  serial_number: string
+  category_id: string
+  location_id: string
+  status: StatusType
+  notes: string
+} = {
   name: '',
   serial_number: '',
   category_id: '',
   location_id: '',
-  status: 'Tersedia' as const,
+  status: 'Tersedia',
   notes: '',
 }
 
