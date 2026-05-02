@@ -32,7 +32,7 @@ const emptyForm: {
   serial_number: '',
   category_id: '',
   location_id: '',
-  status: 'Tersedia',
+  status: 'Tersedia' as 'Tersedia' | 'Digunakan' | 'Rusak',
   notes: '',
 }
 
