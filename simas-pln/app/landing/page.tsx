@@ -218,6 +218,19 @@ export default function LandingPage() {
             <p className="text-[10px] text-slate-600 text-center mt-4 font-mono">
               Hanya personel yang berwenang diizinkan masuk
             </p>
+            <div className="mt-3 p-3 bg-[#0f2040] rounded-lg border border-[#1e4080]/40">
+              <p className="text-[10px] font-mono text-slate-500 mb-1.5">AKUN TERSEDIA:</p>
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px] font-mono">
+                  <span className="text-[#38bdf8]">admin / pln2024</span>
+                  <span className="text-emerald-400">Administrator</span>
+                </div>
+                <div className="flex justify-between text-[10px] font-mono">
+                  <span className="text-[#38bdf8]">manager / manager123</span>
+                  <span className="text-amber-400">Viewer</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

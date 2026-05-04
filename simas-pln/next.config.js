@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  // SIMAS PLN Icon Plus
-}
+const nextConfig = {}
 
 module.exports = nextConfig
