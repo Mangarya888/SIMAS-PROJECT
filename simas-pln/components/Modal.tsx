@@ -3,44 +3,32 @@
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
 
-interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  children: React.ReactNode
-}
-
-export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, title, children }: {
+  isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode
+}) {
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    if (isOpen) document.addEventListener('keydown', handleKey)
-    return () => document.removeEventListener('keydown', handleKey)
+    const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    if (isOpen) document.addEventListener('keydown', h)
+    return () => document.removeEventListener('keydown', h)
   }, [isOpen, onClose])
 
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      {/* Modal */}
-      <div className="relative w-full max-w-lg bg-[#0a1628] border border-[#1e4080]/60 rounded-xl shadow-2xl fade-in">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1e4080]/40">
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-          >
+      <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)' }} onClick={onClose} />
+      <div className="relative w-full max-w-lg rounded-xl shadow-2xl fade-in"
+        style={{ background: 'var(--surface)', border: '1px solid var(--border-2)' }}>
+        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+          <h2 className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>{title}</h2>
+          <button onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+            style={{ color: 'var(--text-tertiary)' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-3)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--text-tertiary)' }}>
             <X className="w-4 h-4" />
           </button>
         </div>
-        {/* Body */}
         <div className="px-6 py-5">{children}</div>
       </div>
     </div>

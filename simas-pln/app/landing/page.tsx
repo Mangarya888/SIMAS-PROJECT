@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
-import { Zap, Shield, BarChart3, Package, History, Eye, EyeOff, ArrowRight } from 'lucide-react'
+import { Zap, Shield, BarChart3, Package, History, Eye, EyeOff, ArrowRight, Lock } from 'lucide-react'
 
 export default function LandingPage() {
   const [showLogin, setShowLogin] = useState(false)
@@ -17,118 +17,98 @@ export default function LandingPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError('')
-    await new Promise(r => setTimeout(r, 600)) // animasi loading
-    const success = login(username, password)
-    if (success) {
-      router.push('/dashboard')
-    } else {
-      setError('Username atau password salah.')
-      setLoading(false)
-    }
+    setLoading(true); setError('')
+    await new Promise(r => setTimeout(r, 500))
+    const ok = login(username, password)
+    if (ok) { router.push('/dashboard') } else { setError('Username atau password salah.'); setLoading(false) }
   }
 
   const features = [
-    { icon: Package, title: 'Manajemen Aset', desc: 'Kelola aset infrastruktur secara digital, real-time' },
-    { icon: BarChart3, title: 'Dashboard Analitik', desc: 'Visualisasi distribusi status aset dalam grafik interaktif' },
-    { icon: History, title: 'Riwayat Otomatis', desc: 'Setiap perubahan tercatat otomatis via database trigger' },
-    { icon: Shield, title: 'Akses Terkontrol', desc: 'Sistem autentikasi untuk menjaga keamanan data aset' },
+    { icon: Package,  title: 'Manajemen Aset',    desc: 'CRUD lengkap dengan filter, pencarian, dan pagination' },
+    { icon: BarChart3,title: 'Laporan & Grafik',  desc: 'Analisis tren bulanan dengan visualisasi interaktif' },
+    { icon: History,  title: 'Log Otomatis',       desc: 'Setiap perubahan tercatat via database trigger' },
+    { icon: Shield,   title: 'Akses Berbasis Role',desc: 'Admin dan Viewer dengan hak akses berbeda' },
   ]
 
+  const inputStyle = {
+    width: '100%', background: 'var(--surface-2)', border: '1px solid var(--border)',
+    borderRadius: '8px', padding: '10px 12px', fontSize: '14px', color: 'var(--text-primary)',
+    outline: 'none',
+  }
+
   return (
-    <div className="min-h-screen bg-[#050d1a] text-white">
+    <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}>
+
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#1e4080]/30 backdrop-blur-md bg-[#050d1a]/80">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#0ea5e9] rounded-lg flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" fill="white" />
-            </div>
-            <div>
-              <span className="font-bold text-white text-sm">SIMAS</span>
-              <span className="text-[#0ea5e9] text-xs ml-2 font-mono">PLN Icon Plus</span>
-            </div>
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4"
+        style={{ background: 'rgba(14,14,16,0.8)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-3">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent)' }}>
+            <Zap className="w-3.5 h-3.5 text-white" fill="white" />
           </div>
-          <button
-            onClick={() => setShowLogin(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#0ea5e9] hover:bg-[#0284c7] text-white text-sm font-medium rounded-lg transition-colors"
-          >
-            Login Admin
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          <span className="font-semibold text-sm">SIMAS</span>
+          <span className="text-xs font-mono px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-dim)', color: 'var(--accent-light)', border: '1px solid var(--accent-border)' }}>
+            PLN Icon Plus
+          </span>
         </div>
+        <button onClick={() => setShowLogin(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+          style={{ background: 'var(--accent)', color: '#fff' }}>
+          Login Admin <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0ea5e9]/10 border border-[#0ea5e9]/30 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9] animate-pulse" />
-            <span className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
-              PLN Icon Plus · Sistem Aset Digital
-            </span>
+      {/* Hero */}
+      <section className="pt-36 pb-20 px-6 text-center">
+        <div className="max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono mb-6"
+            style={{ background: 'var(--accent-dim)', color: 'var(--accent-light)', border: '1px solid var(--accent-border)' }}>
+            <div className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: 'var(--accent-light)' }} />
+            PLN Icon Plus · Sistem Aset Digital v2.0
           </div>
-
-          <h1 className="text-5xl font-bold text-white leading-tight mb-6">
+          <h1 className="text-4xl font-bold mb-4 leading-tight tracking-tight">
             Sistem Informasi<br />
-            <span className="text-[#0ea5e9]">Manajemen Aset</span>
+            <span style={{ color: 'var(--accent-light)' }}>Manajemen Aset</span>
           </h1>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Platform digital untuk mengelola, memantau, dan mencatat riwayat aset infrastruktur 
-            telekomunikasi & IT PLN Icon Plus secara efisien dan akurat.
+          <p className="text-base leading-relaxed mb-8 mx-auto max-w-lg" style={{ color: 'var(--text-secondary)' }}>
+            Platform digital untuk mengelola dan memantau aset infrastruktur telekomunikasi & IT PLN Icon Plus secara efisien.
           </p>
-
-          {/* CTA Buttons */}
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={() => setShowLogin(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[#0ea5e9]/25"
-            >
-              <Shield className="w-4 h-4" />
-              Masuk sebagai Admin
-            </button>
-          </div>
+          <button onClick={() => setShowLogin(true)}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all"
+            style={{ background: 'var(--accent)', color: '#fff' }}>
+            <Lock className="w-4 h-4" />Masuk sebagai Admin
+          </button>
         </div>
       </section>
 
-      {/* Stats Bar */}
-      <section className="py-8 border-y border-[#1e4080]/30 bg-[#0a1628]/50">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="grid grid-cols-3 gap-8 text-center">
-            {[
-              { label: 'Kategori Aset', value: '5+' },
-              { label: 'Titik Lokasi', value: '4+' },
-              { label: 'Log Otomatis', value: '∞' },
-            ].map(s => (
-              <div key={s.label}>
-                <p className="text-3xl font-bold text-[#38bdf8]">{s.value}</p>
-                <p className="text-sm text-slate-500 mt-1">{s.label}</p>
-              </div>
-            ))}
-          </div>
+      {/* Stats */}
+      <div className="py-6 mx-auto max-w-2xl px-6">
+        <div className="grid grid-cols-3 gap-4 text-center p-6 rounded-2xl"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+          {[['5+','Kategori Aset'],['4+','Titik Lokasi'],['∞','Log Otomatis']].map(([v,l]) => (
+            <div key={l}>
+              <p className="text-2xl font-bold mb-0.5" style={{ color: 'var(--accent-light)' }}>{v}</p>
+              <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{l}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
       {/* Features */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-white mb-3">Fitur Unggulan</h2>
-            <p className="text-slate-400 text-sm">Solusi lengkap untuk manajemen aset infrastruktur</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <section className="py-16 px-6">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-lg font-semibold text-center mb-2">Fitur Unggulan</h2>
+          <p className="text-sm text-center mb-10" style={{ color: 'var(--text-tertiary)' }}>Solusi lengkap untuk manajemen aset infrastruktur</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {features.map(({ icon: Icon, title, desc }) => (
-              <div
-                key={title}
-                className="bg-[#0a1628] border border-[#1e4080]/40 rounded-xl p-6 hover:border-[#0ea5e9]/40 transition-all duration-200"
-              >
-                <div className="w-10 h-10 bg-[#0ea5e9]/15 rounded-lg flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-[#38bdf8]" />
+              <div key={title} className="p-5 rounded-xl transition-all"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-4"
+                  style={{ background: 'var(--accent-dim)' }}>
+                  <Icon className="w-4.5 h-4.5" style={{ color: 'var(--accent-light)' }} />
                 </div>
-                <h3 className="font-semibold text-white mb-2">{title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{desc}</p>
+                <p className="text-sm font-semibold mb-1.5">{title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -136,86 +116,65 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#1e4080]/30 py-6 px-6 text-center">
-        <p className="text-xs text-slate-600 font-mono">
-          © 2024 SIMAS · PLN Icon Plus · Sistem Informasi Manajemen Aset v1.0
+      <footer className="py-5 text-center" style={{ borderTop: '1px solid var(--border)' }}>
+        <p className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>
+          © 2025 SIMAS · PLN Icon Plus · v2.0.0
         </p>
       </footer>
 
       {/* Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={() => { setShowLogin(false); setError('') }}
-          />
-          <div className="relative w-full max-w-sm bg-[#0a1628] border border-[#1e4080]/60 rounded-2xl shadow-2xl p-8 fade-in">
-            {/* Logo */}
-            <div className="flex justify-center mb-6">
-              <div className="w-14 h-14 bg-[#0ea5e9]/15 rounded-2xl flex items-center justify-center border border-[#0ea5e9]/30">
-                <Zap className="w-7 h-7 text-[#0ea5e9]" fill="currentColor" />
+          <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}
+            onClick={() => { setShowLogin(false); setError('') }} />
+          <div className="relative w-full max-w-sm rounded-2xl shadow-2xl p-8 fade-in"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border-2)' }}>
+            <div className="flex justify-center mb-5">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                style={{ background: 'var(--accent-dim)', border: '1px solid var(--accent-border)' }}>
+                <Zap className="w-6 h-6" style={{ color: 'var(--accent-light)' }} fill="currentColor" />
               </div>
             </div>
-            <h2 className="text-xl font-bold text-white text-center mb-1">Login Admin</h2>
-            <p className="text-xs text-slate-500 text-center mb-6">Masukkan kredensial untuk mengakses SIMAS</p>
+            <h2 className="text-lg font-bold text-center mb-1">Masuk ke SIMAS</h2>
+            <p className="text-xs text-center mb-6" style={{ color: 'var(--text-tertiary)' }}>
+              Masukkan kredensial untuk mengakses sistem
+            </p>
 
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-3">
               {error && (
-                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-400 text-sm text-center">
+                <div className="p-3 rounded-lg text-xs text-center" style={{ background: 'var(--red-dim)', color: 'var(--red)', border: '1px solid var(--red-border)' }}>
                   {error}
                 </div>
               )}
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 font-medium">Username</label>
-                <input
-                  type="text"
-                  placeholder="Masukkan username"
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
-                  required
-                  className="w-full bg-[#0f2040] border border-[#1e4080]/60 rounded-lg px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0ea5e9] transition-colors"
-                />
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Username</label>
+                <input type="text" placeholder="Masukkan username" value={username}
+                  onChange={e => setUsername(e.target.value)} required style={inputStyle} />
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 font-medium">Password</label>
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Password</label>
                 <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Masukkan password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                    className="w-full bg-[#0f2040] border border-[#1e4080]/60 rounded-lg px-3 py-2.5 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0ea5e9] transition-colors"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
-                  >
+                  <input type={showPassword ? 'text' : 'password'} placeholder="Masukkan password"
+                    value={password} onChange={e => setPassword(e.target.value)} required
+                    style={{ ...inputStyle, paddingRight: '40px' }} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    style={{ color: 'var(--text-tertiary)' }}>
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-2.5 bg-[#0ea5e9] hover:bg-[#0284c7] disabled:opacity-60 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 mt-2"
-              >
+              <button type="submit" disabled={loading}
+                className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 mt-1"
+                style={{ background: loading ? 'var(--surface-3)' : 'var(--accent)', color: loading ? 'var(--text-tertiary)' : '#fff' }}>
                 {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Memverifikasi...
-                  </>
+                  <><div className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: 'var(--text-tertiary)', borderTopColor: 'transparent' }} />Memverifikasi...</>
                 ) : (
-                  <>
-                    <Shield className="w-4 h-4" />
-                    Masuk
-                  </>
+                  <><Shield className="w-4 h-4" />Masuk</>
                 )}
               </button>
             </form>
-
-            <p className="text-[10px] text-slate-600 text-center mt-4 font-mono">
+            <p className="text-[10px] text-center mt-4" style={{ color: 'var(--text-tertiary)' }}>
               Hanya personel yang berwenang diizinkan masuk
             </p>
           </div>
